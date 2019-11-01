@@ -1,6 +1,6 @@
 from flask import Flask,jsonify,request,render_template
 import requests
-import re
+import re,os
 import pdfkit
 import bs4
 from bs4 import BeautifulSoup
@@ -45,8 +45,12 @@ def getLinks():
 @app.route('/pdfDownloader',methods=['POST'])
 def pdfDownloader():
     res=request.get_json()
+    path_new=os.getcwd()+'/'+res['keyword']
+    if os.path.isdir(path_new)==False:
+        os.mkdir(path_new)
+    
     config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltox\\bin\\wkhtmltopdf.exe")
-    pdfkit.from_url(res['Result'][1],res['keyword']+'.pdf',configuration=config)
+    pdfkit.from_url(res['Result'][10],res['keyword']+'/'+res['keyword']+'.pdf',configuration=config)
     return "True"
 
 if __name__ == '__main__':
