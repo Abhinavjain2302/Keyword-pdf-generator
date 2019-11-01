@@ -11,8 +11,8 @@ def form():
     return render_template("index.html")
 
 
-@app.route('/first',methods=['POST'])
-def first():
+@app.route('/getLinks',methods=['POST'])
+def getLinks():
     keyword=request.form.get('keyword')
     # page = requests.get("https://www.google.dz/search?q="+keyword)
     # soup = BeautifulSoup(page.content,"html.parser")
