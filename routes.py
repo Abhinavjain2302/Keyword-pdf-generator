@@ -50,7 +50,8 @@ def pdfDownloader():
         os.mkdir(path_new)
     
     config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltox\\bin\\wkhtmltopdf.exe")
-    pdfkit.from_url(res['Result'][10],res['keyword']+'/'+res['keyword']+'.pdf',configuration=config)
+    for i in range(2,6):
+        pdfkit.from_url(res['Result'][i],res['keyword']+'/'+res['keyword']+str(i)+'.pdf',configuration=config)
     return "True"
 
 if __name__ == '__main__':
