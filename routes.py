@@ -49,7 +49,5 @@ def pdfDownloader():
     pdfkit.from_url(res['Result'][1],res['keyword']+'.pdf',configuration=config)
     return "True"
 
-
-
 if __name__ == '__main__':
     app.run()
