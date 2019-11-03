@@ -1,2 +1,2 @@
 from weasyprint import HTML
-pdf = HTML('http://example.net/hello/').write_pdf()
+pdf = HTML('http://www.google.com').write_pdf()

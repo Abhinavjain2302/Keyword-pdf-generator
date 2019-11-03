@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-page = requests.get("https://www.google.dz/search?q=wwe")
+page = requests.get("https://www.bing.com/search?q=wwe")
+print(page)
 soup = BeautifulSoup(page.content,"html.parser")
 import re
 links = soup.findAll("a")

@@ -1,4 +1,4 @@
-from flask import Flask,jsonify,request,render_template
+from flask import Flask,jsonify,request,render_template,send_from_directory
 import requests
 import re,os
 import pdfkit
@@ -10,6 +10,10 @@ app = Flask(__name__)
 def form():
     return render_template("index.html")
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/getLinks',methods=['POST'])
 def getLinks():
@@ -28,19 +32,13 @@ def getLinks():
     res.raise_for_status()
     soup = bs4.BeautifulSoup(res.text,'html.parser')
     links = soup.select('div#main > div > div > div > a')
-	#print(links)
-	# chrome_path = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
-	# webbrowser.register('chrome', 1,webbrowser.BackgroundBrowser(chrome_path))
-	# webbrowser.get('chrome').open_new_tab('https://google.com' + links[0].get('href'))
     List=[]
     tab_counts = min(30, len(links))
     for i in range(tab_counts):
-		# chrome_path = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
-		# webbrowser.register('chrome', 1,webbrowser.BackgroundBrowser(chrome_path))
-		# webbrowser.get('chrome').open_new_tab('https://google.com' + links[i].get('href'))
 	    List.append('https://google.com' + links[i].get('href'))
-    r=requests.post('http://127.0.0.1:5000/pdfDownloader',json={'Result':List,'keyword':keyword})
-    return r.text
+    requests.post('http://127.0.0.1:5000/pdfDownloader',json={'Result':List,'keyword':keyword})
+    return render_template('download.html')
+    
 
 @app.route('/pdfDownloader',methods=['POST'])
 def pdfDownloader():
@@ -50,8 +48,12 @@ def pdfDownloader():
         os.mkdir(path_new)
     
     config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltox\\bin\\wkhtmltopdf.exe")
-    for i in range(2,6):
-        pdfkit.from_url(res['Result'][i],res['keyword']+'/'+res['keyword']+str(i)+'.pdf',configuration=config)
+    for i in range(0,10):
+        try:
+            pdfkit.from_url(res['Result'][i],res['keyword']+'/'+res['keyword']+str(i)+'.pdf',configuration=config)
+        except:
+            # print("Trying another Link")
+            continue
     return "True"
 
 if __name__ == '__main__':
